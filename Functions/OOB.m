@@ -1,0 +1,48 @@
+function [W,Y_table,acc] = OOB (data,target,bootstrap_num,opts)
+% This functions performs OOB procedure on a given dataset and model and
+% returns weight of OOB models, their predictions, and accuracy.
+% Inputs: 
+%           data: input data organized as n*p samples where n is the number
+%           samples and p is the number of features.
+%           target: Label vector of data organized as n*1 vector. This
+%           vector should contain 1 for positive and -1 for negative
+%           classes.
+%           bootstrap_num: number of bootstraps.
+%           opts: parameters of the model.
+% Outputs: 
+%           W: is a 1*bootstrap_num cell that contains the weight vector of
+%           the model in each bootstrap repitition.
+%           Y_table: is a bootstrap_num*n matrix that contains the
+%           prediction of the model for all test samples in each run of
+%           bootstrap.
+%           acc: is 1*bootstrap_num vector that contains prediction
+%           accuracy of the model in each run of bootstrap.
+
+% Developed by Seyed Mostafa Kia (m.kia83@gmail.com)
+
+[n] = size(data,1);
+Y_table = nan(bootstrap_num,n);
+W = cell(1,bootstrap_num);
+y_pred =cell(1,bootstrap_num);
+randInd = zeros(bootstrap_num,n);
+for f = 1 : bootstrap_num
+    randInd(f,:) = randi(n,[1,n]);
+end
+parfor f = 1 : bootstrap_num
+    X_tr = [];
+    Y_tr = [];
+    X_te = [];
+    Y_te = [];
+    X_tr = data(randInd(f,1:n),:);
+    Y_tr = target(randInd(f,1:n));
+    X_te = data(setdiff(1:n,randInd(f,:)),:);
+    Y_te = target(setdiff(1:n,randInd(f,:)));
+    [W{f}] = EN_LS(X_tr,Y_tr,opts);
+    y_pred{f}= sign(X_te*W{f});
+    y_pred{f}(y_pred{f}==0) = 1;
+    acc(f) = mean(Y_te==y_pred{f});
+    disp(strcat('Bootstrap:',num2str(f)));
+end
+for f = 1 : bootstrap_num
+    Y_table(f,setdiff(1:n,randInd(f,:))) = y_pred{f};
+end
