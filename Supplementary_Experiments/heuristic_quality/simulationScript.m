@@ -22,7 +22,7 @@ addpath('/Functions')
 bootstrap_num = 50;
 Theta_star = reshape(effect,[1,effectSize(1)*effectSize(2)]);
 opts.lambda = 0;
-opts.alpha= 1;
+opts.alpha= 0;
 
 for u = 1 : length(uncertainty_Y)
     for s = 1 : length(sampleNum)
