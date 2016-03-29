@@ -34,7 +34,7 @@ if isfield(opts, 'tol')
         opts.tol = eps * 100;
     end
 else
-    opts.tol = 1e-4;
+    opts.tol = 10e-3;
 end
 if isfield(opts, 'maxIter')
     if (opts.maxIter<1)
@@ -83,7 +83,7 @@ t_old = 0;
 iter = 0;
 gamma = 1;
 gamma_inc = 2;
-
+XY= X * Y;
 while iter < opts.maxIter
     alpha = (t_old - 1) /t;
     
@@ -98,8 +98,8 @@ while iter < opts.maxIter
         Fzp = funVal_eval  (Wzp);
         
         delta_Wzp = Wzp - Ws;
-        r_sum = norm(delta_Wzp, 'fro')^2;
-        Fzp_gamma = Fs + trace(delta_Wzp' * gWs) + gamma/2 * norm(delta_Wzp, 'fro')^2;
+        r_sum = norm(delta_Wzp)^2;
+        Fzp_gamma = Fs + trace(delta_Wzp' * gWs) + gamma/2 * norm(delta_Wzp)^2;
         
         if (r_sum <=1e-20)
             bFlag=1; % this shows that, the gradient step makes little improvement
@@ -173,7 +173,9 @@ W = Wzp;
     end
 
     function [grad_W] = gradVal_eval(W)
-        grad_W = X * X' * W - X * Y;
+        XW = X' * W;
+        XXW = X * XW;
+        grad_W = XXW - XY;
         grad_W = grad_W + rho_L2 * 2 * W;
     end
 
