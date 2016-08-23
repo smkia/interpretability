@@ -9,7 +9,7 @@ function [W] = EN_LS(X, Y, opts)
 %               and L2 penalization. 0 means just L2 penalization and 1 is
 %               Lasso (Default = 0).
 %           opts.lambda: the regularization parameter (Default = 0).   
-%           opts.tol: the tolerance in optimization (Default = 10e-3).  
+%           opts.tol: the tolerance in optimization (Default = 10e-4).  
 %           opts.maxIter: Maximum iterations in optimization (Default = 1000).  
 %           opts.tFlag: Termination condition
 %                           0 => change of absolute function value:
@@ -34,7 +34,7 @@ if isfield(opts, 'tol')
         opts.tol = eps * 100;
     end
 else
-    opts.tol = 10e-3;
+    opts.tol = 10e-4;
 end
 if isfield(opts, 'maxIter')
     if (opts.maxIter<1)

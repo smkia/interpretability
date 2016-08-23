@@ -1,7 +1,7 @@
 %% Single Subject - Lasso
 clear all;
 addpath('/Functions');
-lambda = [0.001,0.01,0.1,1,10,50,100,250,500,1000,5000,10000,15000,25000,50000];
+lambda = [0.001,0.01,0.1,1,10,50,100,250,500,1000];
 alpha = [1];
 timeInterval = 76:325; % -200ms to 800ms
 bootstrap_num = 50; %100;
@@ -45,13 +45,13 @@ for subj= 1 : 16
             opts.alpha=alpha(a);
             [W,Y_table{l,a},acc] = OOB(d,target,bootstrap_num,opts,0);
             ACC(l,a) = mean(acc);
-            [performance(l,a)] = EPE(Y_table{l,a},target{1});
+            [performance(l,a)] = EPE(Y_table{l,a},target);
             [interpretable(l,a)] = interpretability(W,A);
             zeta(l,a) = zeta_phi(performance(l,a).performance,interpretable(l,a).interpretability,1,1,0.6);
             disp(strcat('Subject:',num2str(subj),',Lambda:',num2str(lambda(l)), ...
                 ',Alpha:',num2str(alpha(a)),',Performance:',num2str(performance(l,a).performance),...
-                ',Interpretable:',num2str(interpretable(l,a).interpretability),',Plausible:',num2str(zeta(l,a))));
-            save(strcat('subj',num2str(subj),'_ST_Lasso_Results.mat'),'Y_table','ACC','performance','plausible','interpretable','lambda','alpha');
+                ',Interpretable:',num2str(interpretable(l,a).interpretability),',Zeta:',num2str(zeta(l,a))));
+            save(strcat('subj',num2str(subj),'_ST_Lasso_Results.mat'),'Y_table','ACC','performance','zeta','interpretable','lambda','alpha');
         end
     end
 end

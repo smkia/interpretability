@@ -19,7 +19,7 @@ bVariance = nanmean((Y_table(:,bias)~=repmat(main_prediction(bias),bootstrap_num
 uVariance = nanmean((Y_table(:,~bias)~=repmat(main_prediction(~bias),bootstrap_num,1))+ 0*Y_table(:,~bias));
 res.UV = nanmean([uVariance zeros(1,length(bVariance))]);
 res.BV = nanmean([bVariance zeros(1,length(uVariance))]);
-res.BS = nanmean(bias);
+res.BS = nanmean(double(bias));
 res.VR = nanmean(variance);
 res.EPE = res.BS + res.UV - res.BV;
 res.performance = 1 - res.EPE;

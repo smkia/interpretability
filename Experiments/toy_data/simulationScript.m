@@ -9,7 +9,7 @@ m1 = [1.5;0];
 m2 = [-1.5;0];
 
 addpath(genpath('/Functions/'));
-lambda = [0,0.001,0.01,0.1,1,10,50,100,250,500,1000,5000,10000,15000,25000,50000];
+lambda = [0,0.001,0.01,0.1,1,10,50,100,250,500,1000];
 alpha = [1];
 bootstrap_num = 50; %100;
 bootstrap_frac = 1; 
@@ -45,15 +45,15 @@ for iter = 1 : iterations
             ACC(l,a) = mean(acc);
             [performance{iter}(l,a)] = EPE(Y_table{l,a},Y);
             [interpretable_star{iter}(l,a)] = interpretability(W,Theta_Star);
-            plausible_star{iter}(l,a) = zeta_phi(performance{iter}(l,a).performance,interpretable_star{iter}(l,a).interpretability,1,1,0.6);
+            zeta_star{iter}(l,a) = zeta_phi(performance{iter}(l,a).performance,interpretable_star{iter}(l,a).interpretability,1,1,0.6);
             [interpretable_IBDS{iter}(l,a)] = interpretability(W,Theta_IBDS);
-            plausible_IBDS{iter}(l,a) = zeta_phi(performance{iter}(l,a).performance,interpretable_IBDS{iter}(l,a).interpretability,1,1,0.6);
+            zeta_IBDS{iter}(l,a) = zeta_phi(performance{iter}(l,a).performance,interpretable_IBDS{iter}(l,a).interpretability,1,1,0.6);
             disp(strcat('Iter:',num2str(iter),',Lambda:',num2str(lambda(l)), ...
                 ',Alpha:',num2str(alpha(a)),',Performance:',num2str(performance{iter}(l,a).performance),...
-                ',Interpretable:',num2str(interpretable_star{iter}(l,a).interpretability),',Plausible:',num2str(plausible_star{iter}(l,a))));
+                ',Interpretable:',num2str(interpretable_star{iter}(l,a).interpretability),',Zeta:',num2str(zeta_star{iter}(l,a))));
          end
     end
-    save(strcat('Simulation_Results_shuffled.mat'),'performance','interpretable_star','plausible_star','interpretable_IBDS','plausible_IBDS','lambda','alpha','S1','S2','m1','m2');
+    save(strcat('Simulation_Results_shuffled.mat'),'performance','interpretable_star','zeta_star','interpretable_IBDS','zeta_IBDS','lambda','alpha','S1','S2','m1','m2');
 end
 
 
